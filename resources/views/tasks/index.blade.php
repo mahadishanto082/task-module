@@ -56,13 +56,25 @@
                                         </td>
                                         <td style="display:flex; gap:5px;">
                                             <!-- Toggle Status -->
+
+                                            @if ($task->is_completed)
+                                                <form method="POST" action="{{ route('tasks.status', $task->id) }}">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="btn btn-sm btn-warning">
+                                                        Uncheck
+                                                    </button>
+                                                </form>
+                                            
+                                            @elseif (! $task->is_completed)
                                             <form method="POST" action="{{ route('tasks.status', $task->id) }}">
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit" class="btn btn-sm btn-info">
-                                                    Toggle
+                                                    Check
                                                 </button>
                                             </form>
+                                            @endif
 
                                             <!-- Delete Task -->
                                             <form method="POST" action="{{ route('tasks.destroy', $task->id) }}">

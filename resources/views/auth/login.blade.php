@@ -1,5 +1,5 @@
 <x-layouts.guest>
-    <form method="POST" action="# " method="POST">
+    <form method="POST" action="{{ route('login') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="email" class="form-label">Email address</label>
