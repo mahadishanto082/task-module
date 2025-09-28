@@ -37,7 +37,7 @@ class TaskModulerController extends Controller
         ]);
 
         $task = new Tasks();
-        $task->user_id      = Auth::id(); // assuming tasks are linked to users
+        $task->user_id      = Auth::id(); 
         $task->title        = $request->title;
         $task->description  = $request->description;
         $task->is_completed = $request->is_completed ?? 0; // default 0
