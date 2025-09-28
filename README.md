@@ -89,3 +89,36 @@ Task status (Pending / Completed )
 Database: MySQL / MariaDB
 
 Version Control: Git / GitHub
+
+Task Moduler
+│
+├── app
+│   ├── Http
+│   │   ├── Controllers
+│   │   │   ├── TaskModulerController.php
+│   │   │   ├── UserLoginController.php
+│   │   │   └── RegisteredUserController.php
+│   │   └── Middleware
+│   ├── Models
+│   │   └── Task.php
+│   └── Providers
+│
+├── database
+│   ├── migrations
+│   │   └── create_tasks_table.php
+│   └── seeders
+│
+├── resources
+│   ├── views
+│   │   ├── auth
+│   │   │   ├── login.blade.php
+│   │   │   └── register.blade.php
+│   │   └── tasks
+│   │       └── index.blade.php
+│
+├── routes
+│   └── web.php
+│
+└── public
+    └── assets
+
