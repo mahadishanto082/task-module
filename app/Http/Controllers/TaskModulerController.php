@@ -37,6 +37,7 @@ class TaskModulerController extends Controller
         ]);
 
         $task = new Tasks();
+        $task->user_id      = Auth::id(); // assuming tasks are linked to users
         $task->title        = $request->title;
         $task->description  = $request->description;
         $task->is_completed = $request->is_completed ?? 0; // default 0
@@ -92,7 +93,10 @@ class TaskModulerController extends Controller
 
     public function markAsCompleted($id)
     {
-        $task = Tasks::findOrFail($id);
+        $task = Tasks::where('id', $id)
+        ->where('user_id', Auth::id())
+        ->firstOrFail();
+
         $task->is_completed = true;
         $task->save();
 

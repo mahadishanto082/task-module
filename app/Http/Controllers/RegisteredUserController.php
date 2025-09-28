@@ -1,14 +1,12 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Str;
-use App\Providers\RouteServiceProvider;
 
 class RegisteredUserController extends Controller
 {
@@ -19,7 +17,7 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        return view('auth.registration');
+        return view('auth.registration'); // your registration blade file
     }
 
     /**
@@ -32,6 +30,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate incoming request
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -40,21 +39,18 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Create the user
         $user = User::create([
-            'first_name' => $request->name,
-            'last_name' => $request->name,
-            'user_name' => $request->username,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'user_name' => $request->user_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-           
         ]);
-
-
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME);
+        // Redirect to login page with a success message
+        return redirect()->route('login')->with('success', 'Registration successful! Please login.');
     }
 }
