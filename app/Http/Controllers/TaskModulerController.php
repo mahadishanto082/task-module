@@ -86,11 +86,24 @@ class TaskModulerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+
+
+   
+
+    public function markAsCompleted($id)
+    {
+        $task = Tasks::findOrFail($id);
+        $task->is_completed = true;
+        $task->save();
+
+        return redirect()->route('tasks.index')->with('success', 'Task marked as completed.');
+    }
+      public function destroy($id)
     {
         $task = Tasks::findOrFail($id);
         $task->delete();
 
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
     }
+
 }
