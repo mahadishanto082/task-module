@@ -70,39 +70,6 @@ DB_USERNAME=root
 DB_PASSWORD=
 
 
-
-Task Moduler
-│
-├── app
-│   ├── Http
-│   │   ├── Controllers
-│   │   │   ├── TaskModulerController.php
-│   │   │   ├── UserLoginController.php
-│   │   │   └── RegisteredUserController.php
-│   │   └── Middleware
-│   ├── Models
-│   │   └── Task.php &user.php
-│   └── Providers
-│
-├── database
-│   ├── migrations
-│   │   └── create_tasks_table.php
-│   └── seeders
-│
-├── resources
-│   ├── views
-│   │   ├── auth
-│   │   │   ├── login.blade.php
-│   │   │   └── register.blade.php
-│   │   └── tasks
-│   │       └── index.blade.php
-│
-├── routes
-│   └── web.php
-│
-└── public
-    └── assets
-
     Scalability & Future Enhancements
 
 Database Scalability
@@ -113,25 +80,10 @@ Use pagination for large datasets.
 
 Application Scalability
 
-Convert to API-driven architecture for mobile or SPA clients.
-
-Integrate caching (Redis / Memcached) for frequently accessed tasks.
 
 Feature Enhancements
 
-Task status (Pending / Completed / Overdue)
-
-Notifications / Email reminders
-
-Role-based access control (Admin, Manager, User)
-
-File attachments for tasks
-
-Deployment
-
-Can be deployed on any LAMP/LEMP stack or cloud services like AWS / DigitalOcean.
-
-Use queues for background task processing (emails, notifications).
+Task status (Pending / Completed )
 
 
 Database: MySQL / MariaDB
