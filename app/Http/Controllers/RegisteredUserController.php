@@ -17,7 +17,7 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        return view('auth.registration'); // your registration blade file
+        return view('auth.registration'); //registration blade file
     }
 
     /**

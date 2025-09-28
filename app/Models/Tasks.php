@@ -11,7 +11,7 @@ class Tasks extends Model
     protected $fillable = [
         'title',
         'description',
-        'is_completed', // rename 'status' to 'is_completed' to match your DB
+        'is_completed', // rename 'status' to 'is_completed' 
         'user_id',      // add user_id
     ];
 
