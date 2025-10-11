@@ -13,7 +13,8 @@ class TaskModulerController extends Controller
      */
     public function index()
     {
-            $tasks = Auth::check() ? Auth::user()->tasks : collect();
+        // Only fetch tasks for the logged-in user
+        $tasks = Auth::check() ? Auth::user()->tasks()->orderBy('created_at', 'desc')->get() : collect();
         return view('tasks.index', compact('tasks'));
     }
 
@@ -26,58 +27,61 @@ class TaskModulerController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store newly created tasks (supports multiple tasks) in storage.
      */
     public function store(Request $request)
     {
         $request->validate([
-            'title'       => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'is_completed'=> 'nullable|boolean',
+            'tasks.*.title' => 'required|string|max:255',
+            'tasks.*.description' => 'nullable|string',
         ]);
 
-        $task = new Tasks();
-        $task->user_id      = Auth::id(); 
-        $task->title        = $request->title;
-        $task->description  = $request->description;
-        $task->is_completed = $request->is_completed ?? 0; // default 0
-        $task->save();
+        $tasksData = $request->input('tasks', []);
 
-        return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
+        foreach ($tasksData as $taskData) {
+            $task = new Tasks();
+            $task->user_id = Auth::id();
+            $task->title = $taskData['title'];
+            $task->description = $taskData['description'] ?? null;
+            $task->is_completed = 0; // default incomplete
+            $task->save();
+        }
+
+        return redirect()->route('tasks.index')->with('success', 'Tasks created successfully.');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified task.
      */
     public function show($id)
     {
-        $task = Tasks::findOrFail($id);
+        $task = Tasks::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         return view('tasks.show', compact('task'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified task.
      */
     public function edit($id)
     {
-        $task = Tasks::findOrFail($id);
+        $task = Tasks::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         return view('tasks.edit', compact('task'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified task in storage.
      */
     public function update(Request $request, $id)
     {
         $request->validate([
-            'title'       => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'is_completed'=> 'nullable|boolean',
+            'is_completed' => 'nullable|boolean',
         ]);
 
-        $task = Tasks::findOrFail($id);
-        $task->title        = $request->title;
-        $task->description  = $request->description;
+        $task = Tasks::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $task->title = $request->title;
+        $task->description = $request->description ?? null;
         $task->is_completed = $request->is_completed ?? 0;
         $task->save();
 
@@ -85,29 +89,25 @@ class TaskModulerController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified task from storage.
      */
-
-
-   
-
-    public function markAsCompleted($id)
+    public function destroy($id)
     {
-        $task = Tasks::where('id', $id)
-        ->where('user_id', Auth::id())
-        ->firstOrFail();
-
-        $task->is_completed = true;
-        $task->save();
-
-        return redirect()->route('tasks.index')->with('success', 'Task marked as completed.');
-    }
-      public function destroy($id)
-    {
-        $task = Tasks::findOrFail($id);
+        $task = Tasks::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         $task->delete();
 
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
     }
 
+    /**
+     * Toggle task completion status.
+     */
+    public function markAsCompleted($id)
+    {
+        $task = Tasks::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $task->is_completed = !$task->is_completed;
+        $task->save();
+
+        return redirect()->route('tasks.index')->with('success', 'Task status updated successfully.');
+    }
 }
